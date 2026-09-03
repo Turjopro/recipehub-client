@@ -1,12 +1,21 @@
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
+import { useSession, signOut } from "../lib/authClient";
 
 const Navbar = () => {
+  const { data: session, isPending } = useSession();
+  const navigate = useNavigate();
+
   const links = (
     <>
       <li><NavLink to="/">Home</NavLink></li>
       <li><NavLink to="/browse-recipes">Browse Recipes</NavLink></li>
     </>
   );
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <div className="navbar bg-base-100 shadow-sm px-4 md:px-10">
@@ -31,9 +40,30 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end gap-2">
-        {/* Logged out: show Login/Register. Logged in: show avatar + dashboard link. We'll wire this to auth later */}
-        <Link to="/login" className="btn btn-outline btn-sm">Login</Link>
-        <Link to="/register" className="btn btn-primary btn-sm">Register</Link>
+        {isPending ? (
+          <span className="loading loading-spinner loading-sm"></span>
+        ) : session?.user ? (
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+              <div className="w-10 rounded-full">
+                <img
+                  src={session.user.image || "https://ui-avatars.com/api/?name=" + session.user.name}
+                  alt={session.user.name}
+                />
+              </div>
+            </div>
+            <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
+              <li className="menu-title">{session.user.name}</li>
+              <li><Link to="/dashboard">Dashboard</Link></li>
+              <li><button onClick={handleLogout}>Logout</button></li>
+            </ul>
+          </div>
+        ) : (
+          <>
+            <Link to="/login" className="btn btn-outline btn-sm">Login</Link>
+            <Link to="/register" className="btn btn-primary btn-sm">Register</Link>
+          </>
+        )}
       </div>
     </div>
   );
