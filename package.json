@@ -2,6 +2,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "daisyui": "^5.7.27",
+    "react-router": "^8.3.1",
     "tailwindcss": "^4.3.3"
   }
 }
