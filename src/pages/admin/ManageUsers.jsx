@@ -6,10 +6,12 @@ const ManageUsers = () => {
 
   const fetchUsers = () => {
     setLoading(true);
-    fetch("http://localhost:5000/users")
+    fetch("http://localhost:5000/users", {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
-        setUsers(data);
+        setUsers(Array.isArray(data) ? data : []);
         setLoading(false);
       });
   };
@@ -21,6 +23,7 @@ const ManageUsers = () => {
   const toggleBlock = async (id, currentStatus) => {
     await fetch(`http://localhost:5000/users/${id}/block`, {
       method: "PATCH",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ isBlocked: !currentStatus }),
     });

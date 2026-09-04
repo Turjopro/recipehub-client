@@ -10,10 +10,12 @@ const MyRecipes = () => {
   const fetchMyRecipes = () => {
     if (!session?.user?.email) return;
     setLoading(true);
-    fetch(`http://localhost:5000/my-recipes/${session.user.email}`)
+    fetch(`http://localhost:5000/my-recipes/${session.user.email}`, {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
-        setRecipes(data);
+        setRecipes(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -28,7 +30,10 @@ const MyRecipes = () => {
     if (!confirmDelete) return;
 
     try {
-      await fetch(`http://localhost:5000/recipes/${id}`, { method: "DELETE" });
+      await fetch(`http://localhost:5000/recipes/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
       setRecipes((prev) => prev.filter((r) => r._id !== id));
     } catch {
       alert("Failed to delete recipe");

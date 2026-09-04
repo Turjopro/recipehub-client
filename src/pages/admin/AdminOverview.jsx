@@ -4,9 +4,18 @@ const AdminOverview = () => {
   const [stats, setStats] = useState({ totalUsers: 0, totalRecipes: 0, totalPremium: 0, totalReports: 0 });
 
   useEffect(() => {
-    fetch("http://localhost:5000/admin-stats")
+    fetch("http://localhost:5000/admin-stats", {
+      credentials: "include",
+    })
       .then((res) => res.json())
-      .then(setStats);
+      .then((data) => {
+        setStats({
+          totalUsers: data.totalUsers ?? 0,
+          totalRecipes: data.totalRecipes ?? 0,
+          totalPremium: data.totalPremium ?? 0,
+          totalReports: data.totalReports ?? 0,
+        });
+      });
   }, []);
 
   return (

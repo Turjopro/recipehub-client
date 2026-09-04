@@ -10,16 +10,51 @@ const AddRecipe = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+        { method: "POST", body: formData }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setImageUrl(data.data.display_url);
+      } else {
+        throw new Error("Image upload failed");
+      }
+    } catch (err) {
+      setError("Image upload failed. Try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
+    if (!imageUrl) {
+      setError("Please upload a recipe image first.");
+      return;
+    }
+
+    setLoading(true);
     const form = e.target;
     const recipe = {
       recipeName: form.recipeName.value,
-      recipeImage: form.recipeImage.value,
+      recipeImage: imageUrl,
       category: form.category.value,
       cuisineType: form.cuisineType.value,
       difficultyLevel: form.difficultyLevel.value,
@@ -34,10 +69,12 @@ const AddRecipe = () => {
     try {
       const res = await fetch("http://localhost:5000/recipes", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(recipe),
       });
-      if (!res.ok) throw new Error("Failed to add recipe");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to add recipe");
       navigate("/dashboard/my-recipes");
     } catch (err) {
       setError(err.message);
@@ -51,7 +88,19 @@ const AddRecipe = () => {
       <h1 className="text-2xl font-bold mb-6">Add Recipe</h1>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl">
         <input name="recipeName" placeholder="Recipe Name" className="input input-bordered w-full" required />
-        <input name="recipeImage" placeholder="Recipe Image URL (imgbb link)" className="input input-bordered w-full" required />
+
+        <div className="w-full">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="file-input file-input-bordered w-full"
+          />
+          {uploading && <p className="text-sm text-gray-500 mt-1">Uploading image...</p>}
+          {imageUrl && (
+            <img src={imageUrl} alt="preview" className="w-20 h-20 object-cover rounded mt-2" />
+          )}
+        </div>
 
         <select name="category" className="select select-bordered w-full" required defaultValue="">
           <option value="" disabled>Select Category</option>
@@ -72,7 +121,7 @@ const AddRecipe = () => {
 
         {error && <p className="text-error text-sm md:col-span-2">{error}</p>}
 
-        <button type="submit" className="btn btn-primary md:col-span-2" disabled={loading}>
+        <button type="submit" className="btn btn-primary md:col-span-2" disabled={loading || uploading}>
           {loading ? "Adding..." : "Add Recipe"}
         </button>
       </form>

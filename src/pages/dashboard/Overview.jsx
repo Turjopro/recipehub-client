@@ -13,10 +13,17 @@ const Overview = () => {
 
   useEffect(() => {
     if (!session?.user?.email) return;
-    fetch(`http://localhost:5000/user-stats/${session.user.email}`)
+    fetch(`http://localhost:5000/user-stats/${session.user.email}`, {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
-        setStats(data);
+        setStats({
+          totalRecipes: data.totalRecipes ?? 0,
+          totalFavorites: data.totalFavorites ?? 0,
+          totalLikesReceived: data.totalLikesReceived ?? 0,
+          isPremium: data.isPremium ?? false,
+        });
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -25,6 +32,7 @@ const Overview = () => {
   const handleUpgrade = async () => {
     const res = await fetch("http://localhost:5000/create-checkout-session", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         type: "premium",

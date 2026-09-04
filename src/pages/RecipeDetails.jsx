@@ -32,7 +32,9 @@ const RecipeDetails = () => {
 
   useEffect(() => {
     if (session?.user?.email) {
-      fetch(`http://localhost:5000/favorites/check/${session.user.email}/${id}`)
+      fetch(`http://localhost:5000/favorites/check/${session.user.email}/${id}`, {
+        credentials: "include",
+      })
         .then((res) => res.json())
         .then((data) => setIsFavorited(data.isFavorited));
     }
@@ -43,7 +45,10 @@ const RecipeDetails = () => {
       navigate("/login", { state: { from: `/recipe/${id}` } });
       return;
     }
-    await fetch(`http://localhost:5000/recipes/${id}/like`, { method: "PATCH" });
+    await fetch(`http://localhost:5000/recipes/${id}/like`, {
+      method: "PATCH",
+      credentials: "include",
+    });
     fetchRecipe();
   };
 
@@ -53,11 +58,15 @@ const RecipeDetails = () => {
       return;
     }
     if (isFavorited) {
-      await fetch(`http://localhost:5000/favorites/${session.user.email}/${id}`, { method: "DELETE" });
+      await fetch(`http://localhost:5000/favorites/${session.user.email}/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
       setIsFavorited(false);
     } else {
       await fetch("http://localhost:5000/favorites", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userEmail: session.user.email, userId: session.user.id, recipeId: id }),
       });
@@ -69,6 +78,7 @@ const RecipeDetails = () => {
     if (!reportReason) return;
     await fetch("http://localhost:5000/reports", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         recipeId: id,
@@ -92,6 +102,7 @@ const RecipeDetails = () => {
 
     const res = await fetch("http://localhost:5000/create-checkout-session", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         type: "recipe",

@@ -10,10 +10,12 @@ const Favorites = () => {
   const fetchFavorites = () => {
     if (!session?.user?.email) return;
     setLoading(true);
-    fetch(`http://localhost:5000/favorites/${session.user.email}`)
+    fetch(`http://localhost:5000/favorites/${session.user.email}`, {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
-        setFavorites(data);
+        setFavorites(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -26,6 +28,7 @@ const Favorites = () => {
   const handleRemove = async (recipeId) => {
     await fetch(`http://localhost:5000/favorites/${session.user.email}/${recipeId}`, {
       method: "DELETE",
+      credentials: "include",
     });
     setFavorites((prev) => prev.filter((r) => r._id !== recipeId));
   };

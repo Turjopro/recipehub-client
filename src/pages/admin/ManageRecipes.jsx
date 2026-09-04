@@ -9,7 +9,7 @@ const ManageRecipes = () => {
     fetch("http://localhost:5000/recipes?limit=100")
       .then((res) => res.json())
       .then((data) => {
-        setRecipes(data.recipes);
+        setRecipes(data.recipes || []);
         setLoading(false);
       });
   };
@@ -21,6 +21,7 @@ const ManageRecipes = () => {
   const toggleFeature = async (id, current) => {
     await fetch(`http://localhost:5000/recipes/${id}/feature`, {
       method: "PATCH",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ isFeatured: !current }),
     });
@@ -29,7 +30,10 @@ const ManageRecipes = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this recipe?")) return;
-    await fetch(`http://localhost:5000/recipes/${id}`, { method: "DELETE" });
+    await fetch(`http://localhost:5000/recipes/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
     fetchRecipes();
   };
 

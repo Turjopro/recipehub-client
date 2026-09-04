@@ -5,10 +5,12 @@ const Transactions = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/payments")
+    fetch("http://localhost:5000/payments", {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
-        setPayments(data);
+        setPayments(Array.isArray(data) ? data : []);
         setLoading(false);
       });
   }, []);

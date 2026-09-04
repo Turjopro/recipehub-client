@@ -6,10 +6,12 @@ const Reports = () => {
 
   const fetchReports = () => {
     setLoading(true);
-    fetch("http://localhost:5000/reports")
+    fetch("http://localhost:5000/reports", {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
-        setReports(data);
+        setReports(Array.isArray(data) ? data : []);
         setLoading(false);
       });
   };
@@ -19,14 +21,23 @@ const Reports = () => {
   }, []);
 
   const handleDismiss = async (id) => {
-    await fetch(`http://localhost:5000/reports/${id}/dismiss`, { method: "PATCH" });
+    await fetch(`http://localhost:5000/reports/${id}/dismiss`, {
+      method: "PATCH",
+      credentials: "include",
+    });
     fetchReports();
   };
 
   const handleRemoveRecipe = async (recipeId, reportId) => {
     if (!window.confirm("Delete the reported recipe?")) return;
-    await fetch(`http://localhost:5000/recipes/${recipeId}`, { method: "DELETE" });
-    await fetch(`http://localhost:5000/reports/${reportId}/dismiss`, { method: "PATCH" });
+    await fetch(`http://localhost:5000/recipes/${recipeId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    await fetch(`http://localhost:5000/reports/${reportId}/dismiss`, {
+      method: "PATCH",
+      credentials: "include",
+    });
     fetchReports();
   };
 
