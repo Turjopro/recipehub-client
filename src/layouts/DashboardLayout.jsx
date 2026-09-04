@@ -3,6 +3,7 @@ import { useSession } from "../lib/authClient";
 
 const DashboardLayout = () => {
   const { data: session } = useSession();
+  const isAdmin = session?.user?.role === "admin";
 
   const userLinks = (
     <>
@@ -12,6 +13,17 @@ const DashboardLayout = () => {
       <li><NavLink to="/dashboard/favorites">My Favorites</NavLink></li>
       <li><NavLink to="/dashboard/purchased">Purchased Recipes</NavLink></li>
       <li><NavLink to="/dashboard/profile">Profile</NavLink></li>
+    </>
+  );
+
+  const adminLinks = (
+    <>
+      <li className="menu-title mt-4">Admin</li>
+      <li><NavLink to="/admin">Overview</NavLink></li>
+      <li><NavLink to="/admin/manage-users">Manage Users</NavLink></li>
+      <li><NavLink to="/admin/manage-recipes">Manage Recipes</NavLink></li>
+      <li><NavLink to="/admin/reports">Reports</NavLink></li>
+      <li><NavLink to="/admin/transactions">Transactions</NavLink></li>
     </>
   );
 
@@ -37,6 +49,7 @@ const DashboardLayout = () => {
           </li>
           <li className="menu-title">{session?.user?.name || "Dashboard"}</li>
           {userLinks}
+          {isAdmin && adminLinks}
         </ul>
       </div>
     </div>
