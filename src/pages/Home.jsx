@@ -1,20 +1,21 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
 
-// Dummy data - porer step e backend theke fetch korbo
-const featuredRecipes = [
-  { _id: 1, recipeName: "Chicken Biryani", category: "Rice", cuisineType: "Bangladeshi", preparationTime: "45 min" },
-  { _id: 2, recipeName: "Beef Tehari", category: "Rice", cuisineType: "Bangladeshi", preparationTime: "60 min" },
-  { _id: 3, recipeName: "Alfredo Pasta", category: "Pasta", cuisineType: "Italian", preparationTime: "30 min" },
-];
-
-const popularRecipes = [
-  { _id: 1, recipeName: "Chicken Biryani", likesCount: 245, authorName: "Rakib Hasan" },
-  { _id: 2, recipeName: "Vegetable Curry", likesCount: 189, authorName: "Nusrat Jahan" },
-  { _id: 3, recipeName: "Fish Fry", likesCount: 156, authorName: "Tanvir Ahmed" },
-];
-
 const Home = () => {
+  const [featuredRecipes, setFeaturedRecipes] = useState([]);
+  const [popularRecipes, setPopularRecipes] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/recipes/featured")
+      .then((res) => res.json())
+      .then((data) => setFeaturedRecipes(data));
+
+    fetch("http://localhost:5000/recipes/popular")
+      .then((res) => res.json())
+      .then((data) => setPopularRecipes(data));
+  }, []);
+
   return (
     <div>
       {/* Banner Section */}
@@ -39,41 +40,51 @@ const Home = () => {
       {/* Featured Recipes */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center mb-10">Featured Recipes</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredRecipes.map((recipe, index) => (
-            <motion.div
-              key={recipe._id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.15 }}
-              className="card bg-base-100 shadow-md"
-            >
-              <div className="card-body">
-                <h3 className="card-title">{recipe.recipeName}</h3>
-                <p>Category: {recipe.category}</p>
-                <p>Cuisine: {recipe.cuisineType}</p>
-                <p>Prep Time: {recipe.preparationTime}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {featuredRecipes.length === 0 ? (
+          <p className="text-center opacity-70">No featured recipes yet. Admin can feature recipes from Manage Recipes.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featuredRecipes.map((recipe, index) => (
+              <motion.div
+                key={recipe._id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                className="card bg-base-100 shadow-md"
+              >
+                <div className="card-body">
+                  <h3 className="card-title">{recipe.recipeName}</h3>
+                  <p>Category: {recipe.category}</p>
+                  <p>Cuisine: {recipe.cuisineType}</p>
+                  <p>Prep Time: {recipe.preparationTime}</p>
+                  <Link to={`/recipe/${recipe._id}`} className="btn btn-primary btn-sm mt-2">View Details</Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Popular Recipes */}
       <div className="max-w-7xl mx-auto px-4 py-16 bg-base-200">
         <h2 className="text-3xl font-bold text-center mb-10">Popular Recipes</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {popularRecipes.map((recipe) => (
-            <div key={recipe._id} className="card bg-base-100 shadow-md">
-              <div className="card-body">
-                <h3 className="card-title">{recipe.recipeName}</h3>
-                <p>❤️ {recipe.likesCount} Likes</p>
-                <p>By {recipe.authorName}</p>
+        {popularRecipes.length === 0 ? (
+          <p className="text-center opacity-70">No recipes yet. Be the first to add one!</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {popularRecipes.map((recipe) => (
+              <div key={recipe._id} className="card bg-base-100 shadow-md">
+                <div className="card-body">
+                  <h3 className="card-title">{recipe.recipeName}</h3>
+                  <p>❤️ {recipe.likesCount || 0} Likes</p>
+                  <p>By {recipe.authorName}</p>
+                  <Link to={`/recipe/${recipe._id}`} className="btn btn-primary btn-sm mt-2">View Details</Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Extra Static Section 1 */}
