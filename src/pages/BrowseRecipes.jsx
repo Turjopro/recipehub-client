@@ -13,7 +13,7 @@ const BrowseRecipes = () => {
   useEffect(() => {
     setLoading(true);
     const categoryQuery = selectedCategories.length ? `&category=${selectedCategories.join(",")}` : "";
-    fetch(`http://localhost:5000/recipes?page=${page}&limit=9${categoryQuery}`)
+    fetch(`${import.meta.env.VITE_API_URL}/recipes?page=${page}&limit=9${categoryQuery}`)
       .then((res) => res.json())
       .then((data) => {
         setRecipes(data.recipes);

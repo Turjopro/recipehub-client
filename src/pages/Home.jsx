@@ -7,11 +7,11 @@ const Home = () => {
   const [popularRecipes, setPopularRecipes] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/recipes/featured")
+    fetch(`${import.meta.env.VITE_API_URL}/recipes/featured`)
       .then((res) => res.json())
       .then((data) => setFeaturedRecipes(data));
 
-    fetch("http://localhost:5000/recipes/popular")
+    fetch(`${import.meta.env.VITE_API_URL}/recipes/popular`)
       .then((res) => res.json())
       .then((data) => setPopularRecipes(data));
   }, []);

@@ -12,7 +12,7 @@ const PaymentSuccess = () => {
       setStatus("error");
       return;
     }
-    fetch(`http://localhost:5000/verify-payment/${sessionId}`)
+    fetch(`${import.meta.env.VITE_API_URL}/verify-payment/${sessionId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.payment) {

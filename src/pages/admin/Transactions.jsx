@@ -5,7 +5,7 @@ const Transactions = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/payments", {
+    fetch(`${import.meta.env.VITE_API_URL}/payments`, {
       credentials: "include",
     })
       .then((res) => res.json())

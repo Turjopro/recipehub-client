@@ -10,7 +10,7 @@ const Favorites = () => {
   const fetchFavorites = () => {
     if (!session?.user?.email) return;
     setLoading(true);
-    fetch(`http://localhost:5000/favorites/${session.user.email}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/favorites/${session.user.email}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -26,7 +26,7 @@ const Favorites = () => {
   }, [session]);
 
   const handleRemove = async (recipeId) => {
-    await fetch(`http://localhost:5000/favorites/${session.user.email}/${recipeId}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/favorites/${session.user.email}/${recipeId}`, {
       method: "DELETE",
       credentials: "include",
     });

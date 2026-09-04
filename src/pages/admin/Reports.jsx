@@ -6,7 +6,7 @@ const Reports = () => {
 
   const fetchReports = () => {
     setLoading(true);
-    fetch("http://localhost:5000/reports", {
+    fetch(`${import.meta.env.VITE_API_URL}/reports`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -21,7 +21,7 @@ const Reports = () => {
   }, []);
 
   const handleDismiss = async (id) => {
-    await fetch(`http://localhost:5000/reports/${id}/dismiss`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/reports/${id}/dismiss`, {
       method: "PATCH",
       credentials: "include",
     });
@@ -30,11 +30,11 @@ const Reports = () => {
 
   const handleRemoveRecipe = async (recipeId, reportId) => {
     if (!window.confirm("Delete the reported recipe?")) return;
-    await fetch(`http://localhost:5000/recipes/${recipeId}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/recipes/${recipeId}`, {
       method: "DELETE",
       credentials: "include",
     });
-    await fetch(`http://localhost:5000/reports/${reportId}/dismiss`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/reports/${reportId}/dismiss`, {
       method: "PATCH",
       credentials: "include",
     });

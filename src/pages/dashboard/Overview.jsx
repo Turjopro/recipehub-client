@@ -13,7 +13,7 @@ const Overview = () => {
 
   useEffect(() => {
     if (!session?.user?.email) return;
-    fetch(`http://localhost:5000/user-stats/${session.user.email}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/user-stats/${session.user.email}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -30,7 +30,7 @@ const Overview = () => {
   }, [session]);
 
   const handleUpgrade = async () => {
-    const res = await fetch("http://localhost:5000/create-checkout-session", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/create-checkout-session`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

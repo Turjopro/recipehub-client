@@ -6,7 +6,7 @@ const ManageUsers = () => {
 
   const fetchUsers = () => {
     setLoading(true);
-    fetch("http://localhost:5000/users", {
+    fetch(`${import.meta.env.VITE_API_URL}/users`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -21,7 +21,7 @@ const ManageUsers = () => {
   }, []);
 
   const toggleBlock = async (id, currentStatus) => {
-    await fetch(`http://localhost:5000/users/${id}/block`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/users/${id}/block`, {
       method: "PATCH",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

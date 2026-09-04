@@ -10,7 +10,7 @@ const Purchased = () => {
   useEffect(() => {
     if (!session?.user?.email) return;
     setLoading(true);
-    fetch(`http://localhost:5000/purchased-recipes/${session.user.email}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/purchased-recipes/${session.user.email}`, {
       credentials: "include",
     })
       .then((res) => res.json())

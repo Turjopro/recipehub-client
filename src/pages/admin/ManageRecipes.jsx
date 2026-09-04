@@ -6,7 +6,7 @@ const ManageRecipes = () => {
 
   const fetchRecipes = () => {
     setLoading(true);
-    fetch("http://localhost:5000/recipes?limit=100")
+    fetch(`${import.meta.env.VITE_API_URL}/recipes?limit=100`)
       .then((res) => res.json())
       .then((data) => {
         setRecipes(data.recipes || []);
@@ -19,7 +19,7 @@ const ManageRecipes = () => {
   }, []);
 
   const toggleFeature = async (id, current) => {
-    await fetch(`http://localhost:5000/recipes/${id}/feature`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/recipes/${id}/feature`, {
       method: "PATCH",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -30,7 +30,7 @@ const ManageRecipes = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this recipe?")) return;
-    await fetch(`http://localhost:5000/recipes/${id}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/recipes/${id}`, {
       method: "DELETE",
       credentials: "include",
     });

@@ -67,7 +67,7 @@ const AddRecipe = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/recipes", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/recipes`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

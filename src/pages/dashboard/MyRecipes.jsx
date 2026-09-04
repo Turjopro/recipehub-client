@@ -10,7 +10,7 @@ const MyRecipes = () => {
   const fetchMyRecipes = () => {
     if (!session?.user?.email) return;
     setLoading(true);
-    fetch(`http://localhost:5000/my-recipes/${session.user.email}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/my-recipes/${session.user.email}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -30,7 +30,7 @@ const MyRecipes = () => {
     if (!confirmDelete) return;
 
     try {
-      await fetch(`http://localhost:5000/recipes/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/recipes/${id}`, {
         method: "DELETE",
         credentials: "include",
       });

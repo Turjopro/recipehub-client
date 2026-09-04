@@ -17,7 +17,7 @@ const RecipeDetails = () => {
   const [reportMsg, setReportMsg] = useState("");
 
   const fetchRecipe = () => {
-    fetch(`http://localhost:5000/recipes/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/recipes/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setRecipe(data);
@@ -32,7 +32,7 @@ const RecipeDetails = () => {
 
   useEffect(() => {
     if (session?.user?.email) {
-      fetch(`http://localhost:5000/favorites/check/${session.user.email}/${id}`, {
+      fetch(`${import.meta.env.VITE_API_URL}/favorites/check/${session.user.email}/${id}`, {
         credentials: "include",
       })
         .then((res) => res.json())
@@ -45,7 +45,7 @@ const RecipeDetails = () => {
       navigate("/login", { state: { from: `/recipe/${id}` } });
       return;
     }
-    await fetch(`http://localhost:5000/recipes/${id}/like`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/recipes/${id}/like`, {
       method: "PATCH",
       credentials: "include",
     });
@@ -58,13 +58,13 @@ const RecipeDetails = () => {
       return;
     }
     if (isFavorited) {
-      await fetch(`http://localhost:5000/favorites/${session.user.email}/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/favorites/${session.user.email}/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
       setIsFavorited(false);
     } else {
-      await fetch("http://localhost:5000/favorites", {
+      await fetch(`${import.meta.env.VITE_API_URL}/favorites`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -76,7 +76,7 @@ const RecipeDetails = () => {
 
   const handleReportSubmit = async () => {
     if (!reportReason) return;
-    await fetch("http://localhost:5000/reports", {
+    await fetch(`${import.meta.env.VITE_API_URL}/reports`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -100,7 +100,7 @@ const RecipeDetails = () => {
       return;
     }
 
-    const res = await fetch("http://localhost:5000/create-checkout-session", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/create-checkout-session`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

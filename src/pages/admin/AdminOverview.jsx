@@ -4,7 +4,7 @@ const AdminOverview = () => {
   const [stats, setStats] = useState({ totalUsers: 0, totalRecipes: 0, totalPremium: 0, totalReports: 0 });
 
   useEffect(() => {
-    fetch("http://localhost:5000/admin-stats", {
+    fetch(`${import.meta.env.VITE_API_URL}/admin-stats`, {
       credentials: "include",
     })
       .then((res) => res.json())
