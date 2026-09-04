@@ -17,6 +17,11 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
+  // blocked user কে dashboard এ ঢুকতে দেওয়া হচ্ছে না
+  if (session.user.isBlocked) {
+    return <Navigate to="/blocked" replace />;
+  }
+
   if (session.user.role !== "admin") {
     return <Navigate to="/dashboard" replace />;
   }
