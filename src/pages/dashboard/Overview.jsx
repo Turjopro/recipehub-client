@@ -22,6 +22,20 @@ const Overview = () => {
       .catch(() => setLoading(false));
   }, [session]);
 
+  const handleUpgrade = async () => {
+    const res = await fetch("http://localhost:5000/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "premium",
+        userEmail: session.user.email,
+        userId: session.user.id,
+      }),
+    });
+    const data = await res.json();
+    window.location.href = data.url;
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center py-20">
@@ -61,7 +75,7 @@ const Overview = () => {
         <div className="mt-8 p-6 bg-base-200 rounded-lg text-center">
           <h3 className="font-bold text-lg mb-2">Unlock Unlimited Recipes</h3>
           <p className="mb-4">Become a premium member to add unlimited recipes and get a premium badge.</p>
-          <button className="btn btn-primary">Upgrade to Premium</button>
+          <button onClick={handleUpgrade} className="btn btn-primary">Upgrade to Premium</button>
         </div>
       )}
     </div>

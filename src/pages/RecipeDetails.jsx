@@ -84,13 +84,25 @@ const RecipeDetails = () => {
     }, 1500);
   };
 
-  const handlePurchase = () => {
+  const handlePurchase = async () => {
     if (!session?.user) {
       navigate("/login", { state: { from: `/recipe/${id}` } });
       return;
     }
-    // Stripe checkout will be wired here in a later step
-    alert("Stripe payment coming soon!");
+
+    const res = await fetch("http://localhost:5000/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "recipe",
+        recipeId: id,
+        recipeName: recipe.recipeName,
+        userEmail: session.user.email,
+        userId: session.user.id,
+      }),
+    });
+    const data = await res.json();
+    window.location.href = data.url;
   };
 
   if (loading) {

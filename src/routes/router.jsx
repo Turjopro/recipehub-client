@@ -9,6 +9,7 @@ import RecipeDetails from "../pages/RecipeDetails";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import ErrorPage from "../pages/ErrorPage";
+import PaymentSuccess from "../pages/PaymentSuccess";
 import Overview from "../pages/dashboard/Overview";
 import MyRecipes from "../pages/dashboard/MyRecipes";
 import AddRecipe from "../pages/dashboard/AddRecipe";
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: "recipe/:id", element: <RecipeDetails /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      { path: "payment-success", element: <PaymentSuccess /> },
     ],
   },
   {
