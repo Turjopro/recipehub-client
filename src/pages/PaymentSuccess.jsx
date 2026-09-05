@@ -12,7 +12,9 @@ const PaymentSuccess = () => {
       setStatus("error");
       return;
     }
-    fetch(`${import.meta.env.VITE_API_URL}/verify-payment/${sessionId}`)
+    fetch(`${import.meta.env.VITE_API_URL}/verify-payment/${sessionId}`, {
+      credentials: "include", // ✅ session cookie পাঠানোর জন্য জরুরি
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data.payment) {
@@ -22,7 +24,10 @@ const PaymentSuccess = () => {
           setStatus("error");
         }
       })
-      .catch(() => setStatus("error"));
+      .catch((err) => {
+        console.error("verify-payment error:", err); // ✅ ডিবাগের জন্য
+        setStatus("error");
+      });
   }, [sessionId]);
 
   if (status === "loading") {
